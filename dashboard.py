@@ -1,5 +1,4 @@
 import streamlit as st
-pip install streamlit_pandas
 import streamlit_pandas as sp
 import pandas as pd
 import mysql
