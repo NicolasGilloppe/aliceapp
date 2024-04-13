@@ -9,6 +9,7 @@ st.markdown('<style>div.block-container{padding-top:1rem;}</style', unsafe_allow
 
 
 df = pd.read_excel('Alice.xlsx')
+df = df.drop(df.columns[0], axis=1)
 
 create_data = {'Pays': 'multiselect'}
 all_widgets = sp.create_widgets(df[['Pays', 'Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15']], create_data)
