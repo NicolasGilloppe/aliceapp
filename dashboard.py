@@ -17,9 +17,11 @@ def main():
     choice = st.sidebar.selectbox("Menu", menu)
     data = list(collection.find({}))
     df = pd.DataFrame(data)
-
-    
-    df = df.drop(df.columns[0], axis=1)
+    if '_id' in df.columns:
+        df = df.drop('_id', axis=1)
+    elif 'Unnamed: 0' in df.columns:
+        df = df.drop('Unnamed: 0', axis=1)
+        
     wr_pays = {'Chile': 0.5, 'Japan': 0.5, 'Usa': 0.5, 'Romania': 0.33, 'Brazil2': 0.42, 'Brazil': 0.5, 'Norway': 0.67, 'China': 0.5, 'Denmark': 0.33, 'England3': 0.67, 'Japan2': 0.0, 'England2': 0.67, 'England4': 0.57, 'Mexico': 0.58, 'Spain2': 0.58, 'Saudi Arabia': 0.64, 'Croatia': 0.85, 'Germany2': 0.77, 'Belgium': 0.8, 'Netherlands2': 0.67, 'Italy': 0.57, 'Italy2': 0.47, 'Turkey': 0.78, 'Germany': 0.68, 'England': 0.68, 'Netheany': 0.68, 'Englaany': 0.68, 'England': 0.68, 'Netherlands': 0.67, 'Scotland': 0.71, 'France2': 0.62, 'France': 0.62, 'Spain': 0.79, 'Austria': 0.0, 'Switzerland': 0.54, 'Australia': 0.69, 'Portugal': 0.5} 
     wr_bets = {'Ho15': 0.36, 'U': 0.59, 'H': 0.73, 'O': 0.67, 'BTTS': 0.69, 'NoBTTS': 0.17, 'A': 0.4, 'HD': 0.78, 'DA': 0.73}
     
