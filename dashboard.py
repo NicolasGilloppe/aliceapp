@@ -64,7 +64,7 @@ def main():
     elif choice == 'Alice Historical Datas':
         st.subheader('Alice Performance')
         check_box = st.checkbox(label='Show Alice Historical Results')
-        st.link_button(label='Link to Alice historical results', url='https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/edit#gid=0')
+        st.link_button(label='Link to Alice historical results', url=https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/edit#gid=0)
         url = f"https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
         df = pd.read_csv(url, dtype=str)
         df = df[['Date', 'Home', 'Away', 'Country', 'Bet', 'Odds', 'Stake', 'Result', 'Profit', 'BK']].dropna()
