@@ -6,6 +6,7 @@ import plotly.express as px
 
 # Config
 def main():
+    st.set_page_config(layout='wide', page_icon=':bar_chart', page_title='Alice')
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
     choice = st.sidebar.selectbox("Menu", menu)
     df = pd.read_excel('Alice.xlsx')
