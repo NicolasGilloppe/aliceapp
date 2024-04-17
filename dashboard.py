@@ -1,4 +1,4 @@
-import streamlit as st
+"""import streamlit as st
 import streamlit_pandas as sp
 import pandas as pd
 import plotly.express as px
@@ -163,7 +163,20 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main()"""
+
+import streamlit as st
+from st_paywall import add_auth
+
+
+
+st.set_page_config(layout='wide', page_icon=':bar_chart', page_title='Alice')
+st.title('Home Page')
+
+add_auth(required=True)
+
+
+st.write('Thanks for joining us!!!!')
 
 
 
