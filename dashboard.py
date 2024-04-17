@@ -5,18 +5,13 @@ import plotly.express as px
 from pymongo.mongo_client import MongoClient
 
 
-uri = "mongodb+srv://nicolasgilloppe:s0S8eaYt0mIMdYE7@alicedb.eqrplwk.mongodb.net/?retryWrites=true&w=majority&appName=alicedb"
-cluster = MongoClient(uri, connectTimeoutMS=30000, socketTimeoutMS=30000)
-db= cluster["alicedb"]
-collection = db['Alicetest']
-
 # Config
 def main():
     st.set_page_config(layout='wide', page_icon=':bar_chart', page_title='Alice')
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
     choice = st.sidebar.selectbox("Menu", menu)
-    data = list(collection.find({}))
-    df = pd.DataFrame(data)
+
+    df = pd.read_excel('Alice.xlsx')
     if '_id' in df.columns:
         df = df.drop('_id', axis=1)
     elif 'Unnamed: 0' in df.columns:
