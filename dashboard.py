@@ -2,14 +2,23 @@ import streamlit as st
 import streamlit_pandas as sp
 import pandas as pd
 import plotly.express as px
+from pymongo.mongo_client import MongoClient
 
+
+uri = "mongodb+srv://nicolasgilloppe:s0S8eaYt0mIMdYE7@alicedb.eqrplwk.mongodb.net/?retryWrites=true&w=majority&appName=alicedb"
+cluster = MongoClient(uri, connectTimeoutMS=30000, socketTimeoutMS=30000)
+db= cluster["alicedb"]
+collection = db['Alicetest']
 
 # Config
 def main():
     st.set_page_config(layout='wide', page_icon=':bar_chart', page_title='Alice')
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
     choice = st.sidebar.selectbox("Menu", menu)
-    df = pd.read_excel('Alice.xlsx')
+    data = list(collection.find({}))
+    df = pd.DataFrame(data)
+
+    
     df = df.drop(df.columns[0], axis=1)
     wr_pays = {'Chile': 0.5, 'Japan': 0.5, 'Usa': 0.5, 'Romania': 0.33, 'Brazil2': 0.42, 'Brazil': 0.5, 'Norway': 0.67, 'China': 0.5, 'Denmark': 0.33, 'England3': 0.67, 'Japan2': 0.0, 'England2': 0.67, 'England4': 0.57, 'Mexico': 0.58, 'Spain2': 0.58, 'Saudi Arabia': 0.64, 'Croatia': 0.85, 'Germany2': 0.77, 'Belgium': 0.8, 'Netherlands2': 0.67, 'Italy': 0.57, 'Italy2': 0.47, 'Turkey': 0.78, 'Germany': 0.68, 'England': 0.68, 'Netheany': 0.68, 'Englaany': 0.68, 'England': 0.68, 'Netherlands': 0.67, 'Scotland': 0.71, 'France2': 0.62, 'France': 0.62, 'Spain': 0.79, 'Austria': 0.0, 'Switzerland': 0.54, 'Australia': 0.69, 'Portugal': 0.5} 
     wr_bets = {'Ho15': 0.36, 'U': 0.59, 'H': 0.73, 'O': 0.67, 'BTTS': 0.69, 'NoBTTS': 0.17, 'A': 0.4, 'HD': 0.78, 'DA': 0.73}
@@ -25,8 +34,6 @@ def main():
                    'Betclic': ['Germany', 'Germany2', 'England', 'England2', 'Saudi Arabia', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Sweden', 'Turkey', 'Switzerland'],
                    'Winamax': ['Germany', 'Germany2', 'England', 'England2', 'Saudi Arabia', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Sweden', 'Switzerland', 'Turkey']
                    }
-        df = pd.read_excel('Alice.xlsx')
-        df = df.drop(df.columns[0], axis=1)
 
         round_cols = ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15']
         df[round_cols] = df[round_cols].round(2)
