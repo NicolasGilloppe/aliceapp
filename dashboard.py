@@ -140,7 +140,7 @@ def main():
 
         st.markdown(selection.drop('Conf', axis=1).style.hide(axis="index").to_html(), unsafe_allow_html=True)
         content = """
-        Please note that while these selections reflect Alice's preferences, she may not necessarily place bets on all of them. They serve as indicative suggestions for your personal betting decisions. Various factors, including odds, bankroll management, Alice's recent performance, and more, should be considered before placing any wagers. Additionally, these picks may differ from the daily recommendations provided under your personnal betting strategy
+        #Please note that while these selections reflect Alice's preferences, she may not necessarily place bets on all of them. They serve as indicative suggestions for your personal betting decisions. Various factors, including odds, bankroll management, Alice's recent performance, and more, should be considered before placing any wagers. Additionally, these picks may differ from the daily recommendations provided under your personnal betting strategy
         """
         st.write('')
         st.write('')
