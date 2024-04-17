@@ -3,3 +3,4 @@ streamlit_pandas
 pandas
 openpyxl
 plotly.express
+plotly
