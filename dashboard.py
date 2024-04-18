@@ -4,7 +4,7 @@ import streamlit as st
 from st_mongo_connection import MongoDBConnection
 
 
-connection = st.connection("mongodb", type=MongoDBConnection)
+connection = st.connection("mongodb", type=MongoDBConnection)["alicedb"]["alicetest"]
 
 
 data = list(connection.find({}))
