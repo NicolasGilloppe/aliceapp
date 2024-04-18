@@ -32,7 +32,7 @@ def main():
         today = today.strftime('%d-%m-%y')
 
         if df['Date'][0] != today:
-            st.write('There is no matchs today!')
+            st.title('There is no matchs today!')
         else:
             round_cols = ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15']
             df[round_cols] = df[round_cols].round(2)
@@ -99,58 +99,65 @@ def main():
 
     elif choice == 'Alice Picks of the Day':
         st.subheader("Today's Alice Picks Selection")
-
-        selection = pd.DataFrame(columns=['Time', 'Champ', 'Home', 'Away', 'Pays', 'Bets', 'Conf'])
-        for index, row in df.iterrows():
-            datas = [row['Time'], row['Champ'], row['Home'], row['Away'], row['Pays']]
-            for _ in ['H', 'D', 'A', 'HD', 'DA', 'O', 'U', 'BTTS', 'NoBTTS', 'Ho15', 'Ao15']:
-                conf = 0
-                try:
-                    bets = wr_bets[_]
-                except:
-                    bets = 0
-                
-                try:
-                    pays = wr_pays[row['Pays']]
-                except:
-                    pays = 0
-
-                if float(bets) >= 0.8:
-                    conf += 1
-                elif float(bets) >= 0.7:
-                    conf += 0.75
-                elif float(bets) >= 0.6:
-                    conf += 0.5
-                
-                if float(pays) >= 0.8:
-                    conf += 1
-                elif float(pays) >= 0.7:
-                    conf += 0.75
-                elif float(pays) >= 0.6:
-                    conf += 0.5
-
-                if float(row[f'Proba_{_}']) >= 0.8:
-                    conf += 1
-                elif float(row[f'Proba_{_}']) >= 0.7:
-                    conf += 0.75
-                elif float(row[f'Proba_{_}']) >= 0.6:
-                    conf += 0.5
-                
-                selection.loc[len(selection)] = datas + [_, conf]
         
-        selection = selection[selection['Conf'] >= 2.25]
-        if len(selection) > 3:
-            nombre_lignes_a_supprimer = len(selection) - 3
-            indices_lignes_a_supprimer = selection.sample(n=nombre_lignes_a_supprimer).index
-            selection = selection.drop(indices_lignes_a_supprimer)
+        tz = pytz.timezone('Europe/Paris')
+        today = datetime.datetime.now(tz).date()
+        today = today.strftime('%d-%m-%y')
 
-        st.markdown(selection.drop('Conf', axis=1).style.hide(axis="index").to_html(), unsafe_allow_html=True)
-        content = """
-        Please note that while these selections reflect Alice's preferences, she may not necessarily place bets on all of them. They serve as indicative suggestions for your personal betting decisions. Various factors, including odds, bankroll management, Alice's recent performance, and more, should be considered before placing any wagers. Additionally, these picks may differ from the daily recommendations provided under your personnal betting strategy
-        """
-        st.write('')
-        st.write('')
-        st.write(content)
+        if df['Date'][0] != today:
+            st.title('There is no matchs today!')
+        else:
+            selection = pd.DataFrame(columns=['Time', 'Champ', 'Home', 'Away', 'Pays', 'Bets', 'Conf'])
+            for index, row in df.iterrows():
+                datas = [row['Time'], row['Champ'], row['Home'], row['Away'], row['Pays']]
+                for _ in ['H', 'D', 'A', 'HD', 'DA', 'O', 'U', 'BTTS', 'NoBTTS', 'Ho15', 'Ao15']:
+                    conf = 0
+                    try:
+                        bets = wr_bets[_]
+                    except:
+                        bets = 0
+                    
+                    try:
+                        pays = wr_pays[row['Pays']]
+                    except:
+                        pays = 0
+    
+                    if float(bets) >= 0.8:
+                        conf += 1
+                    elif float(bets) >= 0.7:
+                        conf += 0.75
+                    elif float(bets) >= 0.6:
+                        conf += 0.5
+                    
+                    if float(pays) >= 0.8:
+                        conf += 1
+                    elif float(pays) >= 0.7:
+                        conf += 0.75
+                    elif float(pays) >= 0.6:
+                        conf += 0.5
+    
+                    if float(row[f'Proba_{_}']) >= 0.8:
+                        conf += 1
+                    elif float(row[f'Proba_{_}']) >= 0.7:
+                        conf += 0.75
+                    elif float(row[f'Proba_{_}']) >= 0.6:
+                        conf += 0.5
+                    
+                    selection.loc[len(selection)] = datas + [_, conf]
+            
+            selection = selection[selection['Conf'] >= 2.25]
+            if len(selection) > 3:
+                nombre_lignes_a_supprimer = len(selection) - 3
+                indices_lignes_a_supprimer = selection.sample(n=nombre_lignes_a_supprimer).index
+                selection = selection.drop(indices_lignes_a_supprimer)
+    
+            st.markdown(selection.drop('Conf', axis=1).style.hide(axis="index").to_html(), unsafe_allow_html=True)
+            content = """
+            Please note that while these selections reflect Alice's preferences, she may not necessarily place bets on all of them. They serve as indicative suggestions for your personal betting decisions. Various factors, including odds, bankroll management, Alice's recent performance, and more, should be considered before placing any wagers. Additionally, these picks may differ from the daily recommendations provided under your personnal betting strategy
+            """
+            st.write('')
+            st.write('')
+            st.write(content)
 
     elif choice == 'Download':
         st.write("Click on the Download Button below to get Alice's probabilities in an external file")
