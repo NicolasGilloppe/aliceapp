@@ -9,12 +9,6 @@ from pymongo.mongo_client import MongoClient
 def get_datas(clu, database):
     return pd.DataFrame(list(MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find({})))
 
-
-uri = "mongodb+srv://nicolasgilloppe:s0S8eaYt0mIMdYE7@alicedb.eqrplwk.mongodb.net/?retryWrites=true&w=majority&appName=alicedb"
-cluster = MongoClient(uri, connectTimeoutMS=30000, socketTimeoutMS=30000)
-db= cluster["alicedb"]
-collection = db['Alicetest']
-
 # Config
 def main():
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
@@ -100,7 +94,6 @@ def main():
         selection = pd.DataFrame(columns=['Time', 'Champ', 'Home', 'Away', 'Pays', 'Bets', 'Conf'])
         for index, row in df.iterrows():
             datas = [row['Time'], row['Champ'], row['Home'], row['Away'], row['Pays']]
-            bets = wr_bets['H']
             for _ in ['H', 'D', 'A', 'HD', 'DA', 'O', 'U', 'BTTS', 'NoBTTS', 'Ho15', 'Ao15']:
                 conf = 0
                 try:
