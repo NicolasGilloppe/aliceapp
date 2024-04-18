@@ -3,7 +3,6 @@ import pandas as pd
 import streamlit as st
 from st_mongo_connection import MongoDBConnection
 
-connection = st.connection("mongodb", type=MongoDBConnection)
 connection = st.connection(
     "mongodb",
     url="mongodb+srv://nicolasgilloppe:s0S8eaYt0mIMdYE7@alicedb.eqrplwk.mongodb.net/",
