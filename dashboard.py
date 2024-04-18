@@ -5,6 +5,6 @@ from st_mongo_connection import MongoDBConnection
 
 
 connection = st.connection("mongodb", type=MongoDBConnection)
-data = list(collection.find({}))
+data = list(connection.find({}))
 df = pd.DataFrame(data)
 st.write(df)
