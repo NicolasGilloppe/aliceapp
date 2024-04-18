@@ -7,7 +7,7 @@ import datetime
 import pytz
 
 
-@st.cache_data(ttl=3)
+@st.cache_data(ttl=3600)
 def get_datas(clu, database):
     return pd.DataFrame(list(MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find({})))
 
