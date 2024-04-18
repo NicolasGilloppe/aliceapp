@@ -4,9 +4,11 @@ import streamlit as st
 from st_mongo_connection import MongoDBConnection
 
 
-connection = st.connection("mongodb", type=MongoDBConnection)["alicedb"]["alicetest"]
+connection = st.connection("mongodb", type=MongoDBConnection)
+db = connection["alicedb"]
+collection = db["users"]
 
 
-data = list(connection.find({}))
+data = list(collection.find({}))
 df = pd.DataFrame(data)
 st.write(df)
