@@ -22,17 +22,17 @@ def main():
     choice = st.sidebar.selectbox("Menu", menu)
     
     if choice == 'Home':
-        st.subheader('Home Page')
+        st.title('Home Page')
         st.write('Welcome to Alice!')
         st.write('Here You can find data-driven predictions on your daily football games!')   
     if choice == 'Predictions':
-        st.subheader('Predictions')
+        st.title('Predictions')
         tz = pytz.timezone('Europe/Paris')
         today = datetime.datetime.now(tz).date()
         today = today.strftime('%d-%m-%y')
 
         if df['Date'][0] != today:
-            st.title('There is no matchs today!')
+            st.subheader('There is no matchs today!')
         else:
             round_cols = ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15']
             df[round_cols] = df[round_cols].round(2)
@@ -74,7 +74,7 @@ def main():
                 st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
     elif choice == 'Alice Historical Datas':
-        st.subheader('Alice Performance')
+        st.title('Alice Performance')
         check_box = st.checkbox(label='Show Alice Historical Results')
         st.link_button(label='Link to Alice historical results', url='https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/edit#gid=0')
         url = "https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
@@ -98,14 +98,14 @@ def main():
             st.markdown(histo.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
     elif choice == 'Alice Picks of the Day':
-        st.subheader("Today's Alice Picks Selection")
+        st.title("Today's Alice Picks Selection")
         
         tz = pytz.timezone('Europe/Paris')
         today = datetime.datetime.now(tz).date()
         today = today.strftime('%d-%m-%y')
 
         if df['Date'][0] != today:
-            st.title('There is no matchs today!')
+            st.subheader('There is no matchs today!')
         else:
             selection = pd.DataFrame(columns=['Time', 'Champ', 'Home', 'Away', 'Pays', 'Bets', 'Conf'])
             for index, row in df.iterrows():
