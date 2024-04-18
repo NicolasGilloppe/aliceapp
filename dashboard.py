@@ -5,18 +5,19 @@ import plotly.express as px
 from pymongo.mongo_client import MongoClient
 
 
-@st.cache_data(ttl=15)
+@st.cache_data(ttl=3600)
 def get_datas(clu, database):
     return pd.DataFrame(list(MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find({})))
+df = get_datas('alicedb', 'Alicetest')
+df = df.drop(df.columns[0], axis=1)
+wr_pays = get_datas('alicedb', 'wr_pays')
+wr_bets = get_datas('alicedb', 'wr_bets')
+
 
 # Config
 def main():
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
     choice = st.sidebar.selectbox("Menu", menu)
-    df = get_datas('alicedb', 'Alicetest')
-    df = df.drop(df.columns[0], axis=1)
-    wr_pays = get_datas('alicedb', 'wr_pays')
-    wr_bets = get_datas('alicedb', 'wr_bets')
     
     if choice == 'Home':
         st.subheader('Home Page')
