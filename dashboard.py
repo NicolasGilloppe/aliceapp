@@ -5,7 +5,7 @@ import plotly.express as px
 from pymongo.mongo_client import MongoClient
 
 
-@st.cache_data
+
 def get_datas(clu, database):
     return pd.DataFrame(list(MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find({})))
 
