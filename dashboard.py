@@ -19,12 +19,10 @@ collection = db['Alicetest']
 def main():
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
     choice = st.sidebar.selectbox("Menu", menu)
-    data = list(collection.find({}))
-    print(collection)
-    df = pd.DataFrame(data)
+    df = get_datas('alicedb', 'Alicetest')
     df = df.drop(df.columns[0], axis=1)
-    wr_pays = {'Chile': 0.5, 'Japan': 0.5, 'Usa': 0.5, 'Romania': 0.33, 'Brazil2': 0.42, 'Brazil': 0.5, 'Norway': 0.67, 'China': 0.5, 'Denmark': 0.33, 'England3': 0.67, 'Japan2': 0.0, 'England2': 0.67, 'England4': 0.57, 'Mexico': 0.58, 'Spain2': 0.58, 'Saudi Arabia': 0.64, 'Croatia': 0.85, 'Germany2': 0.77, 'Belgium': 0.8, 'Netherlands2': 0.67, 'Italy': 0.57, 'Italy2': 0.47, 'Turkey': 0.78, 'Germany': 0.68, 'England': 0.68, 'Netheany': 0.68, 'Englaany': 0.68, 'England': 0.68, 'Netherlands': 0.67, 'Scotland': 0.71, 'France2': 0.62, 'France': 0.62, 'Spain': 0.79, 'Austria': 0.0, 'Switzerland': 0.54, 'Australia': 0.69, 'Portugal': 0.5} 
-    wr_bets = {'Ho15': 0.36, 'U': 0.59, 'H': 0.73, 'O': 0.67, 'BTTS': 0.69, 'NoBTTS': 0.17, 'A': 0.4, 'HD': 0.78, 'DA': 0.73}
+    wr_pays = get_datas('alicedb', 'wr_pays')
+    wr_bets = get_datas('alicedb', 'wr_bets')
     
     if choice == 'Home':
         st.subheader('Home Page')
@@ -76,7 +74,7 @@ def main():
         st.subheader('Alice Performance')
         check_box = st.checkbox(label='Show Alice Historical Results')
         st.link_button(label='Link to Alice historical results', url='https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/edit#gid=0')
-        url = f"https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
+        url = "https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
         df = pd.read_csv(url, dtype=str)
         df = df[['Date', 'Home', 'Away', 'Country', 'Bet', 'Odds', 'Stake', 'Result', 'Profit', 'BK']].dropna()
         
