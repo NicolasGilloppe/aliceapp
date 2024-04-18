@@ -8,16 +8,14 @@ from pymongo.mongo_client import MongoClient
 @st.cache_data(ttl=3600)
 def get_datas(clu, database):
     return pd.DataFrame(list(MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find({})))
-df = get_datas('alicedb', 'Alicetest')
-df = df.drop(df.columns[0], axis=1)
-round_cols = ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15']
-df[round_cols] = df[round_cols].round(2)
-wr_pays = get_datas('alicedb', 'wr_pays')
-wr_bets = get_datas('alicedb', 'wr_bets')
 
 
 # Config
 def main():
+    df = get_datas('alicedb', 'Alicetest')
+    df = df.drop(df.columns[0], axis=1)
+    wr_pays = get_datas('alicedb', 'wr_pays')
+    wr_bets = get_datas('alicedb', 'wr_bets')
     menu = ['Home', 'Predictions', 'Alice Picks of the Day', 'Alice Historical Datas', 'Download']
     choice = st.sidebar.selectbox("Menu", menu)
     
@@ -26,8 +24,9 @@ def main():
         st.write('Welcome to Alice!')
         st.write('Here You can find data-driven predictions on your daily football games!')   
     if choice == 'Predictions':
-        df = df.copy()
         st.subheader('Predictions')
+        round_cols = ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15']
+        df[round_cols] = df[round_cols].round(2)
         champ_by_bookie = {'Unibet': ['Germany', 'Germany2', 'England', 'England2', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Scotland', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Portugal2', 'Sweden', 'Switzerland', 'Turkey'],
                    'Stake': ['England', 'England2', 'England3', 'England4', 'Germany', 'Germany2', 'Spain', 'Spain2', 'Italy', 'Italy2', 'France', 'France2', 'Netherlands', 'Netherlands2', 'Portugal', 'Portugal2', 'Argentina', 'Austria', 'Australia', 'Brazil', 'Brazil2', 'Chile', 'China', 'Denmark', 'Japan', 'Japan2', 'Mexico', 'Norway', 'Saudi Arabia', 'Scotland', 'Sweden', 'Switzerland', 'Turkey', 'Usa', 'Croatia'],
                    'Betclic': ['Germany', 'Germany2', 'England', 'England2', 'Saudi Arabia', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Sweden', 'Turkey', 'Switzerland'],
