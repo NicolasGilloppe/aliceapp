@@ -9,7 +9,7 @@ connection = st.connection(
     database="alicedb",
     collection="Alicetest",
     kwargs={
-        "retryWrites": true,
+        "retryWrites": "true",
         "w": "majority",
         "maxIdleTimeMS": 180000,
         "serverSelectionTimeoutMS": 2000
