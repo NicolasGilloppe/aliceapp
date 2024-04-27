@@ -14,7 +14,7 @@ def get_datas(clu, database):
 
 # Config
 def main():
-    df = get_datas('alicedb', 'Alicetest')
+    df = get_datas('alicedb', 'Alice_1')
     df = df.drop(df.columns[0], axis=1)
     wr_pays = get_datas('alicedb', 'wr_pays')
     wr_bets = get_datas('alicedb', 'wr_bets')
