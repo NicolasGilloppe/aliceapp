@@ -97,6 +97,14 @@ def main():
         user_bookies = user_data['Books']
         df = get_datas('alicedb', 'Alice_1')
 
+        lexique = pd.DataFrame(
+                    {'Alice Naming': ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 
+                                    'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15'],
+                    'Bet Signification': ['Home team win', 'Draw', 'Away team win', 'Home or Draw', 'Draw or Away',
+                                    'Over 2.5 goal', 'Under 2.5 goal', 'Both Team To Score', 'One Or Both Team To Not Score',
+                                    'Home win & Over 1.5 goal', 'Away win & over 1.5 goal']}
+                )
+        
         try:
             df = df.drop(df.columns[0], axis=1)
         except:
@@ -130,14 +138,6 @@ def main():
                     df[col] = df[col].apply(lambda x: f"{x:.2f}")
         
                 st.markdown(df.style.hide(axis="index").to_html(), unsafe_allow_html=True)
-                
-                lexique = pd.DataFrame(
-                    {'Alice Naming': ['Proba_H', 'Proba_D', 'Proba_A', 'Proba_HD', 'Proba_DA', 
-                                    'Proba_O', 'Proba_U', 'Proba_BTTS', 'Proba_NoBTTS', 'Proba_Ho15', 'Proba_Ao15'],
-                    'Bet Signification': ['Home team win', 'Draw', 'Away team win', 'Home or Draw', 'Draw or Away',
-                                    'Over 2.5 goal', 'Under 2.5 goal', 'Both Team To Score', 'One Or Both Team To Not Score',
-                                    'Home win & Over 1.5 goal', 'Away win & over 1.5 goal']}
-                )
         
                 if st.checkbox(label='Show Bets Signification'):
                     st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
@@ -185,7 +185,9 @@ def main():
                         st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
                 except ValueError:
                     st.warning('Veuillez entrer une Bankroll valide')
-                
+                    
+                if st.checkbox(label='Show Bets Signification'):
+                    st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
