@@ -70,8 +70,8 @@ def main():
     st.write('')
     st.write('')
     st.write('')
-
-     get_session_state()
+    
+    get_session_state()
 
     if st.session_state.is_user_logged:
         st.write('Welcome back')
