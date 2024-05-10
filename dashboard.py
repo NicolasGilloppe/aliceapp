@@ -29,23 +29,34 @@ def is_valid_email(email):
     return re.match(email_regex, email) is not None
 
 def get_session_state():
-    if 'is_user_logged' not in st.session_state:
-        st.session_state.is_user_logged = False
-    if 'user_data' not in st.session_state:
-        st.session_state.user_data = None
+    if 'session_state' not in st.session_state:
+        st.session_state['session_state'] = SessionState(is_user_logged=False, user_data=None)
+    return st.session_state['session_state']
 
 def get_user_infos(clu, database, email):
     return MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find_one({'_id': email})
 
 def insert_datas(clu, database, datas):
     MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].insert_one(datas)
-    
-def login(email, password):
-    result = get_user_infos('UsersDb', 'Users', email)
-    if result is not None:
-        if verify_password(password, result.get('password')):
-            return True, result
-    return False, None
+
+def login(session_state):
+    email = st.text_input('Email Address')
+    password = st.text_input('Password', type='password')   
+    if st.button('Login'):
+        if email and password:
+            result = get_user_infos('UsersDb', 'Users', email)
+            if result is not None:
+                if verify_password(password, result.get('password')):
+                    session_state.is_user_logged = True
+                    session_state.user_data = result
+                    session_state = get_session_state()
+                    st.write('You are now Logged In. Please click on the Login button once more!')
+                else:
+                    st.write('Password Invalid')
+            else:
+                st.write('No Account found for This Email')
+        else:
+            st.write('Please enter Email and Password')
 
 def signup():
     email = st.text_input('Email Address', key='email_input')
@@ -70,34 +81,19 @@ def main():
     st.write('')
     st.write('')
     st.write('')
-    
-    get_session_state()
 
-    if st.session_state.is_user_logged:
-        st.write('Welcome back')
-        return
+    session_state = get_session_state()
 
     if not session_state.is_user_logged:
         col1, col2 = st.columns(2)
         with col1:
             st.write("<h2 style='text-align: center; font-size: 30px;'>Login</h2>", unsafe_allow_html=True)
-            email = st.text_input('Email Address')
-            password = st.text_input('Password', type='password')
-            if st.button('Login'):
-                if email and password:
-                    # Call the login function and get the result
-                    is_valid_login, user_data = login(email, password)
-                    if is_valid_login:
-                        session_state.is_user_logged = True
-                        session_state.user_data = user_data
-                        st.write('You are now Logged In')
-                    else:
-                        st.write('Invalid Email or Password')
-                else:
-                    st.write('Please enter Email and Password')
+            login(session_state)
+            session_state = get_session_state()
         with col2:
             st.write("<h2 style='text-align: center; font-size: 30px;'>Sign Up</h2>", unsafe_allow_html=True)
             signup()
+        
     else:
         user_data = session_state.user_data
         user_name = user_data.get('name')
@@ -197,5 +193,6 @@ def main():
                 if st.checkbox(label='Show Bets Signification'):
                     st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
+
