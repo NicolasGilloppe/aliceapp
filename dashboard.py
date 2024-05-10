@@ -27,7 +27,7 @@ class SessionState:
 def is_valid_email(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(email_regex, email) is not None
-
+@st.cache_data(ttl=432000)
 def get_session_state():
     if 'session_state' not in st.session_state:
         st.session_state['session_state'] = SessionState(is_user_logged=False, user_data=None)
@@ -39,7 +39,6 @@ def get_user_infos(clu, database, email):
 def insert_datas(clu, database, datas):
     MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].insert_one(datas)
     
-@st.cache_data(ttl=432000)
 def login(session_state):
     email = st.text_input('Email Address')
     password = st.text_input('Password', type='password')   
