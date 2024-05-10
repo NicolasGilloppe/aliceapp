@@ -29,9 +29,10 @@ def is_valid_email(email):
     return re.match(email_regex, email) is not None
 
 def get_session_state():
-    if 'session_state' not in st.session_state:
-        st.session_state['session_state'] = SessionState(is_user_logged=False, user_data=None)
-    return st.session_state['session_state']
+    if 'is_user_logged' not in st.session_state:
+        st.session_state.is_user_logged = False
+    if 'user_data' not in st.session_state:
+        st.session_state.user_data = None
 
 def get_user_infos(clu, database, email):
     return MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].find_one({'_id': email})
@@ -39,7 +40,6 @@ def get_user_infos(clu, database, email):
 def insert_datas(clu, database, datas):
     MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].insert_one(datas)
     
-@st.cache_data(ttl=432000)
 def login(email, password):
     result = get_user_infos('UsersDb', 'Users', email)
     if result is not None:
@@ -64,14 +64,19 @@ def signup():
             insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
 
-def main(session_state):
+def main():
     st.write("<h2 style='text-align: center; font-size: 80px;'>Welcome to Alice</h2>", unsafe_allow_html=True)
     st.write("<h2 style='text-align: center; font-size: 15px; color: cyan;'>Your-all-in one personal betting algorithm</h2>", unsafe_allow_html=True)
     st.write('')
     st.write('')
     st.write('')
 
-    session_state = get_session_state()
+     get_session_state()
+
+    if st.session_state.is_user_logged:
+        st.write('Welcome back')
+        return
+
     if not session_state.is_user_logged:
         col1, col2 = st.columns(2)
         with col1:
@@ -193,4 +198,4 @@ def main(session_state):
                     st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
 if __name__ == "__main__":
-    main(get_session_state())
+    main()
