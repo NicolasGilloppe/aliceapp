@@ -38,7 +38,8 @@ def get_user_infos(clu, database, email):
 
 def insert_datas(clu, database, datas):
     MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].insert_one(datas)
-
+    
+@st.cache_data(ttl=432000)
 def login(session_state):
     email = st.text_input('Email Address')
     password = st.text_input('Password', type='password')   
