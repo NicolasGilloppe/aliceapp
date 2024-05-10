@@ -39,23 +39,13 @@ def get_user_infos(clu, database, email):
 def insert_datas(clu, database, datas):
     MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].insert_one(datas)
     
-def login(session_state):
-    email = st.text_input('Email Address')
-    password = st.text_input('Password', type='password')   
-    if st.button('Login'):
-        if email and password:
-            result = get_user_infos('UsersDb', 'Users', email)
-            if result is not None:
-                if verify_password(password, result.get('password')):
-                    session_state.is_user_logged = True
-                    session_state.user_data = result
-                    st.write('You are now Logged In')
-                else:
-                    st.write('Password Invalid')
-            else:
-                st.write('No Account found for This Email')
-        else:
-            st.write('Please enter Email and Password')
+@st.cache_data(ttl=432000)
+def login(email, password):
+    result = get_user_infos('UsersDb', 'Users', email)
+    if result is not None:
+        if verify_password(password, result.get('password')):
+            return True, result
+    return False, None
 
 def signup():
     email = st.text_input('Email Address', key='email_input')
@@ -74,7 +64,7 @@ def signup():
             insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
 
-def main():
+def main(session_state):
     st.write("<h2 style='text-align: center; font-size: 80px;'>Welcome to Alice</h2>", unsafe_allow_html=True)
     st.write("<h2 style='text-align: center; font-size: 15px; color: cyan;'>Your-all-in one personal betting algorithm</h2>", unsafe_allow_html=True)
     st.write('')
@@ -86,7 +76,20 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             st.write("<h2 style='text-align: center; font-size: 30px;'>Login</h2>", unsafe_allow_html=True)
-            login(session_state)
+            email = st.text_input('Email Address')
+            password = st.text_input('Password', type='password')
+            if st.button('Login'):
+                if email and password:
+                    # Call the login function and get the result
+                    is_valid_login, user_data = login(email, password)
+                    if is_valid_login:
+                        session_state.is_user_logged = True
+                        session_state.user_data = user_data
+                        st.write('You are now Logged In')
+                    else:
+                        st.write('Invalid Email or Password')
+                else:
+                    st.write('Please enter Email and Password')
         with col2:
             st.write("<h2 style='text-align: center; font-size: 30px;'>Sign Up</h2>", unsafe_allow_html=True)
             signup()
@@ -189,5 +192,5 @@ def main():
                 if st.checkbox(label='Show Bets Signification'):
                     st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    main(get_session_state())
