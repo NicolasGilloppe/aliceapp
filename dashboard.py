@@ -27,7 +27,7 @@ class SessionState:
 def is_valid_email(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(email_regex, email) is not None
-@st.cache_data(ttl=432000)
+
 def get_session_state():
     if 'session_state' not in st.session_state:
         st.session_state['session_state'] = SessionState(is_user_logged=False, user_data=None)
@@ -47,6 +47,7 @@ def login(session_state):
             result = get_user_infos('UsersDb', 'Users', email)
             if result is not None:
                 if verify_password(password, result.get('password')):
+                    @st.cache_data(ttl=432000)
                     session_state.is_user_logged = True
                     session_state.user_data = result
                     st.write('You are now Logged In')
