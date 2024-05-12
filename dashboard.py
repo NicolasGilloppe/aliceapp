@@ -186,7 +186,8 @@ def main():
                                 user_picks.at[index, 'Bookmaker'] = book
 
                     for index, row in user_picks.iterrows():
-                        st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
+                        if float(row['Odd']) >= 1.15:
+                            st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
                 except ValueError:
                     st.warning('Veuillez entrer une Bankroll valide')
                     
