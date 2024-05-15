@@ -174,7 +174,7 @@ def main():
             if user_picks.empty:
                 st.write("There's no matchs for you today!")
             else:
-                bk = st.text_input('Enter your Bankroll:')
+                bk = st.text_input('Enter your Bankroll:').replace(',', '.')
                 try:
                     bk = float(bk)
                     for index, row in user_picks.iterrows():
