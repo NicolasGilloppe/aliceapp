@@ -172,31 +172,29 @@ def main():
         elif choice == "Today's Picks":
             user_picks = get_datas('alicedb', 'odds_1')
             col1, col2 = st.columns(2)
-            with col1:
-                if user_picks.empty:
-                    st.write("There's no matchs for you today!")
-                else:
-                    bk = st.text_input('Enter your Bankroll:').replace(',', '.')
-                    try:
-                        bk = float(bk)
-                        for index, row in user_picks.iterrows():
-                            odd = 0
-                            for book in user_bookies:
-                                odds = float(row[f'Odds_{book}'])
-                                if odds > odd:
-                                    user_picks.at[index, 'Odd'] = odds
-                                    user_picks.at[index, 'Bookmaker'] = book
+            if user_picks.empty:
+                st.write("There's no matchs for you today!")
+            else:
+                bk = st.text_input('Enter your Bankroll:').replace(',', '.')
+                try:
+                    bk = float(bk)
+                    for index, row in user_picks.iterrows():
+                        odd = 0
+                        for book in user_bookies:
+                            odds = float(row[f'Odds_{book}'])
+                            if odds > odd:
+                                user_picks.at[index, 'Odd'] = odds
+                                user_picks.at[index, 'Bookmaker'] = book
     
-                        for index, row in user_picks.iterrows():
-                            if float(row['Odd']) >= 1.1:
-                                st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
-                    except ValueError:
-                        st.warning('Veuillez entrer une Bankroll valide')
-                        
-                    if st.checkbox(label='Show Bets Signification'):
-                        st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
-            with col2:
-                st.write('JK')
+                    for index, row in user_picks.iterrows():
+                        if float(row['Odd']) >= 1.1:
+                            st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
+                except ValueError:
+                    st.warning('Veuillez entrer une Bankroll valide')
+            with col1:
+                if st.checkbox(label='Show Bets Signification'):
+                    st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
+
 if __name__ == '__main__':
     main()
 
