@@ -210,7 +210,7 @@ def main():
                 plotly_fig.update_xaxes(title_text='Number of Bets')
                 
                 st.plotly_chart(plotly_fig)
-                st.write(f"Alice generated a {round(last-start, 2)}% ROI in {len(historical)} bets, with an average win rate of {(round(float(len(historical[historical['Result'] == '1'])) / float(len(historical)), 2)) * 100}%!!")
+                st.write(f"Alice generated you a {round(last-start, 2)}% ROI in {len(historical)} bets, with an average win rate of {(round(float(len(historical[historical['Result'] == '1'])) / float(len(historical)), 2)) * 100}%!!")
 
 if __name__ == '__main__':
     main()
