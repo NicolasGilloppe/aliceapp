@@ -201,6 +201,7 @@ def main():
                 historical['Date'] = pd.to_datetime(historical['Date'], format='%d/%m/%Y')
                 user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
                 filtered_df = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
+                filtered_df = filtered_df.drop(df.columns[0], axis=1)
 
                 
                 st.write(user_join)
