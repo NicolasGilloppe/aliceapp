@@ -210,7 +210,7 @@ def main():
                 
                 
                 st.write(user_join)
-                st.write(filtered_df)
+                st.plotly_chart(plotly_fig)
 
 if __name__ == '__main__':
     main()
