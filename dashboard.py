@@ -72,7 +72,7 @@ def signup():
         elif password and conf_password and password != conf_password:
             st.warning('Please enter the same password')
         elif password and conf_password and email and password == conf_password and name:
-            insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
+            insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books, 'Join': datetime.datetime.today().strftime('%d-%m-%y')})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
 
 def main():
