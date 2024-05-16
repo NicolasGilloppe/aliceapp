@@ -206,6 +206,7 @@ def main():
                 last = float(histo_bk[-1].replace(',','.'))
                 histo_bk = [(float(value.replace(',', '.')) / start) * 100 for value in histo_bk]
                 plotly_fig = px.line(historical, y=histo_bk, title=f'{user_name} Portfolio performance since {user_join}')
+                st.write(f"Alice generated a {round(last-start, 2)}% ROI in {len(historical)} bets, with an average win rate of {(round(float(len(historical[historical['Result'] == '1'])) / float(len(historical)), 2)) * 100}%!!")
                 plotly_fig.update_yaxes(title_text='Portfolio')
                 plotly_fig.update_xaxes(title_text='Number of Bets')
                 
