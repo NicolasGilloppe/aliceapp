@@ -202,10 +202,10 @@ def main():
                 user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
                 historical = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
                 histo_bk = historical['BK'].to_list()
-                start = histo_bk[0]
+                start = float(histo_bk[0].replace(',','.')
                 last = histo_bk[-1]
                 st.write(start, last)
-                histo_bk = [(value/start)*100 for value in histo_bk]
+                histo_bk = [float((value.replace(',','.')/start)*100) for value in histo_bk]
                 st.write(histo_bk)
                 plotly_fig = px.line(historical, x=historical.index, y=histo_bk, title='Alice Return on Investment Over Time')
                 plotly_fig.update_yaxes(title_text='Portfolio')
