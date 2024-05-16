@@ -201,9 +201,7 @@ def main():
                 historical['Date'] = pd.to_datetime(historical['Date'], format='%d/%m/%Y')
                 user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
                 filtered_df = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
-                if filtered_df['BK'].iloc[0] != 0:
-                    # Convertir les valeurs de la colonne 'BK' en indice base 100
-                    filtered_df['BK'] = (filtered_df['BK'] / filtered_df['BK'].iloc[0]) * 100
+                
                 
                 st.write(user_join)
                 st.write(filtered_df)
