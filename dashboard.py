@@ -205,7 +205,7 @@ def main():
                 start = float(histo_bk[0].replace(',','.'))
                 last = histo_bk[-1]
                 st.write(start, last)
-                histo_bk = [float((value.replace(',','.')/start)*100) for value in histo_bk]
+                histo_bk = [(float(value.replace(',', '.')) / start) * 100 for value in histo_bk]
                 st.write(histo_bk)
                 plotly_fig = px.line(historical, x=historical.index, y=histo_bk, title='Alice Return on Investment Over Time')
                 plotly_fig.update_yaxes(title_text='Portfolio')
