@@ -198,7 +198,7 @@ def main():
             with col2:
                 url = "https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
                 historical = pd.read_csv(url, dtype=str)[['Date', 'Home', 'Away', 'Country', 'Bet', 'Odds', 'Stake', 'Result', 'Profit', 'BK']].dropna()
-                historical['Date'] = pd.to_datetime(historical['Date'], format='%d-%m-%y')
+                historical['Date'] = pd.to_datetime(historical['Date'].replace('/', '-'), format='%d-%m-%y')
                 user_join = pd.to_datetime(user_join, format='%d-%m-%y')
                 filtered_df = df[df['Date'] > user_join_date]
 
