@@ -99,6 +99,7 @@ def main():
         user_name = user_data.get('name')
         user_username = user_data.get('_id')
         user_bookies = user_data['Books']
+        user_join = user_data['Join']
         df = get_datas('alicedb', 'Alice_1')
 
         lexique = pd.DataFrame(
@@ -171,7 +172,6 @@ def main():
 
         elif choice == "Today's Picks":
             user_picks = get_datas('alicedb', 'odds_1')
-            col1, col2 = st.columns(2)
             if user_picks.empty:
                 st.write("There's no matchs for you today!")
             else:
@@ -191,9 +191,12 @@ def main():
                             st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
                 except ValueError:
                     st.warning('Veuillez entrer une Bankroll valide')
+            col1, col2 = st.columns(2)
             with col1:
                 if st.checkbox(label='Show Bets Signification'):
                     st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
+            with col2:
+                st.write(user_join)
 
 if __name__ == '__main__':
     main()
