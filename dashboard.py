@@ -195,7 +195,8 @@ def main():
                         
                     if st.checkbox(label='Show Bets Signification'):
                         st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
-
+            with col2:
+                st.write('JK')
 if __name__ == '__main__':
     main()
 
