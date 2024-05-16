@@ -202,7 +202,9 @@ def main():
                 user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
                 historical = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
                 histo_bk = historical['BK'].to_list()
-                st.write(histo_bk)
+                start = histo_bk[0]
+                last = histo_bk[-1]
+                st.write(start, last)
                 histo_last_bk = float(histo_bk[-1].replace(',', '.')) - 100
                 histo_bk = [float(value.replace(',', '.')) for value in histo_bk]
                 plotly_fig = px.line(historical, x=historical.index, y=histo_bk, title='Alice Return on Investment Over Time')
