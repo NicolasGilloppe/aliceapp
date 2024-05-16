@@ -200,7 +200,7 @@ def main():
                 historical = pd.read_csv(url, dtype=str)[['Date', 'Home', 'Away', 'Country', 'Bet', 'Odds', 'Stake', 'Result', 'Profit', 'BK']].dropna()
                 historical['Date'] = pd.to_datetime(historical['Date'], format='%d/%m/%Y')
                 user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
-                filtered_df = df[pd.to_datetime(df['Date']) > pd.to_datetime(user_join_date)]
+                filtered_df = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
 
                 
                 st.write(user_join)
