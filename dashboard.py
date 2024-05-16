@@ -196,22 +196,21 @@ def main():
                 if st.checkbox(label='Show Bets Signification'):
                     st.markdown(lexique.style.hide(axis="index").to_html(), unsafe_allow_html=True)
             with col2:
-                with st.beta_container():
-                    url = "https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
-                    historical = pd.read_csv(url, dtype=str)[['Date', 'Home', 'Away', 'Country', 'Bet', 'Odds', 'Stake', 'Result', 'Profit', 'BK']].dropna()
-                    historical['Date'] = pd.to_datetime(historical['Date'], format='%d/%m/%Y')
-                    user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
-                    historical = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
-                    histo_bk = historical['BK'].to_list()
-                    start = float(histo_bk[0].replace(',','.'))
-                    last = float(histo_bk[-1].replace(',','.'))
-                    histo_bk = [(float(value.replace(',', '.')) / start) * 100 for value in histo_bk]
-                    plotly_fig = px.line(historical, y=histo_bk, title=f'{user_name} Portfolio performance since {user_join}')
-                    plotly_fig.update_yaxes(title_text='Portfolio')
-                    plotly_fig.update_xaxes(title_text='Number of Bets')
+                url = "https://docs.google.com/spreadsheets/d/1k-khn63iYWNiDsC9iHVWlQXl1T_LZ1sE7doEptvJtrU/gviz/tq?tqx=out:csv&sheet=Tracking"        
+                historical = pd.read_csv(url, dtype=str)[['Date', 'Home', 'Away', 'Country', 'Bet', 'Odds', 'Stake', 'Result', 'Profit', 'BK']].dropna()
+                historical['Date'] = pd.to_datetime(historical['Date'], format='%d/%m/%Y')
+                user_join_date = pd.to_datetime(user_join, format='%d-%m-%y')
+                historical = historical[pd.to_datetime(historical['Date']) > pd.to_datetime(user_join_date)]
+                histo_bk = historical['BK'].to_list()
+                start = float(histo_bk[0].replace(',','.'))
+                last = float(histo_bk[-1].replace(',','.'))
+                histo_bk = [(float(value.replace(',', '.')) / start) * 100 for value in histo_bk]
+                plotly_fig = px.line(historical, y=histo_bk, title=f'{user_name} Portfolio performance since {user_join}')
+                plotly_fig.update_yaxes(title_text='Portfolio')
+                plotly_fig.update_xaxes(title_text='Number of Bets')
                     
-                    st.plotly_chart(plotly_fig)
-                    st.write(f"Alice generated you a {round(last-start, 2)}% ROI in {len(historical)} bets, with an average win rate of {(round(float(len(historical[historical['Result'] == '1'])) / float(len(historical)), 2)) * 100}%!!")
+                st.plotly_chart(plotly_fig)
+                st.write(f"Alice generated you a {round(last-start, 2)}% ROI in {len(historical)} bets, with an average win rate of {(round(float(len(historical[historical['Result'] == '1'])) / float(len(historical)), 2)) * 100}%!!")
 
 if __name__ == '__main__':
     main()
