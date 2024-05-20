@@ -232,9 +232,7 @@ def main():
             shome, saway = match_display.split(' - ')
             if selected_match:
                 hsel = datas[(datas['Squad'] == shome) & (datas['Pays'] == spays)]
-                st.write(hsel)
                 asel = datas[(datas['Squad'] == saway) & (datas['Pays'] == spays)]
-                st.write(asel)
                 data = {
                     ' ': ['MP', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'GFPG', 'GAPG', 'AS', 'DS'],
                     shome: [hsel['MPH'].values[0], round(hsel['HW/MP'].values[0] * hsel['MPH'].values[0]), round(hsel['HD/MP'].values[0]*hsel['MPH'].values[0]), round(hsel['HL/MP'].values[0]*hsel['MPH'].values[0]), hsel['GFH'].values[0], hsel['GAH'].values[0], (hsel['GFH'].values[0] - hsel['GAH'].values[0]), hsel['HGFPG'].values[0], hsel['HGAPG'].values[0], hsel['HAS'].values[0], hsel['HDS'].values[0]],
