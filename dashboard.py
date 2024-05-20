@@ -109,12 +109,20 @@ def main():
                                     'Over 2.5 goal', 'Under 2.5 goal', 'Both Team To Score', 'One Or Both Team To Not Score',
                                     'Home win & Over 1.5 goal', 'Away win & over 1.5 goal']}
                 )
+
+        trans = pd.DataFrame(
+                    {'Naming': ['MP', 'W', 'D', 'L', 'GF', 
+                                    'GA', 'GD', 'GFPG', 'GAPG', 'AS', 'DS'],
+                    'Signification': ['Number of matchs played', 'Wins', 'Draws', 'Losses', 'Number of Goal Scored',
+                                    'Number of Goal Conceded', 'Goal Difference', 'Average Number of Goal Score per Game', 'Average Number of Goal Conceded per game',
+                                    'Team Attack Strength Compared to League Average', 'Team Defensive Strength Compared to League Average']}
+                )
         
         try:
             df = df.drop(df.columns[0], axis=1)
         except:
             pass
-        choice = st.selectbox("Menu", ['Predictions', "Today's Picks", 'Historical Datas', 'Download'])
+        choice = st.selectbox("Menu", ['Predictions', 'Advanced Statistics', "Today's Picks", 'Historical Datas', 'Download'])
 
         if choice == 'Predictions':
             st.write('You can get your Daily Picks Here')
@@ -211,7 +219,118 @@ def main():
                     
                 st.plotly_chart(plotly_fig)
                 st.write(f"Alice generated you a {round(last-start, 2)}% ROI in {len(historical)} bets, with an average win rate of {(round(float(len(historical[historical['Result'] == '1'])) / float(len(historical)), 2)) * 100}%!!")
+        elif choice == 'Advanced Statistics':
+            datas = get_datas('alicedb', 'leaguesdb').drop(['_id'], axis=1).fillna(0)
+            df['Match'] = '[' + df['Pays'] + '] / ' + df['Home'] + ' - ' + df['Away']
+            unique_matches = df['Match'].unique()
 
+            st.title('Select a Match')
+            selected_match = st.selectbox('', unique_matches)
+            spays = selected_match.split('] / ')[0][1:] if '] / ' in selected_match else None
+            match_display = selected_match.split('] / ', 1)[1] if '] / ' in selected_match else selected_match
+            shome, saway = match_display.split(' - ')
+            if selected_match:
+                hsel = datas[(datas['Squad'] == shome) & (datas['Pays'] == spays)]
+                st.write(hsel)
+                asel = datas[(datas['Squad'] == saway) & (datas['Pays'] == spays)]
+                st.write(asel)
+                data = {
+                    ' ': ['MP', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'GFPG', 'GAPG', 'AS', 'DS'],
+                    shome: [hsel['MPH'].values[0], round(hsel['HW/MP'].values[0] * hsel['MPH'].values[0]), round(hsel['HD/MP'].values[0]*hsel['MPH'].values[0]), round(hsel['HL/MP'].values[0]*hsel['MPH'].values[0]), hsel['GFH'].values[0], hsel['GAH'].values[0], (hsel['GFH'].values[0] - hsel['GAH'].values[0]), hsel['HGFPG'].values[0], hsel['HGAPG'].values[0], hsel['HAS'].values[0], hsel['HDS'].values[0]],
+                    saway: [asel['MPA'].values[0], round(asel['AW/MP'].values[0]*asel['MPA'].values[0]), round(asel['AD/MP'].values[0]*asel['MPA'].values[0]), round(asel['AL/MP'].values[0]*asel['MPA'].values[0]), asel['GFA'].values[0], asel['GAA'].values[0], (asel['GFA'].values[0] - asel['GAA'].values[0]), asel['AGFPG'].values[0], asel['AGAPG'].values[0], asel['AAS'].values[0], asel['ADS'].values[0]]
+                }
+                dff = pd.DataFrame(data)
+                for col in [shome, saway]:
+                    dff[col] = dff[col].apply(lambda x: f"{x:.2f}")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown(dff.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                    if st.checkbox(label='Show Bets Signification'):
+                        st.markdown(trans.style.hide(axis="index").to_html(), unsafe_allow_html=True)
+                with col2:
+                    choice = st.selectbox("Select a Bookmaker", ['Stake', 'Winamax'])
+
+                    if choice == 'Stake':
+                        st.link_button(label='Match Url', url= 'https://stake.bet/fr/sports/soccer/norway/eliteserien/44338223-hamarkameratene-bodoe-glimt')
+                        odsr = pd.DataFrame([{'Home': '6.20', 'Draw': '4.80', 'Away': '1.41'}])
+                        st.markdown(odsr.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                        odsd = pd.DataFrame([{'Home/Draw': '2.70', 'Draw/Away': '1.12'}])
+                        st.markdown(odsd.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                        odso = pd.DataFrame([{'Over 2.5': '2.43', 'Under 2.5': '1.54'}])
+                        st.markdown(odso.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                        odsb = pd.DataFrame([{'BTTS': '1.72', 'NoBTTS': '2.01'}])
+                        st.markdown(odsb.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                    elif choice == 'Winamax':
+                        st.link_button(label='Match Url', url= 'https://www.winamax.fr/paris-sportifs/match/46374315')
+                        odsr = pd.DataFrame([{'Home': '6.15', 'Draw': '4.67', 'Away': '1.38'}])
+                        st.markdown(odsr.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                        odsd = pd.DataFrame([{'Home/Draw': '2.68', 'Draw/Away': '1.1'}])
+                        st.markdown(odsd.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                        odso = pd.DataFrame([{'Over 2.5': '2.37', 'Under 2.5': '1.5'}])
+                        st.markdown(odso.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+                        odsb = pd.DataFrame([{'BTTS': '1.68', 'NoBTTS': '1.98'}])
+                        st.markdown(odsb.style.hide(axis='index').to_html(), unsafe_allow_html=True)
+                        st.write('')
+
+                gr1, gr2 = st.columns(2)
+                with gr1:
+                    st.title(shome)
+                    value1 = dff[dff[' '] == 'W'][shome].values[0]
+                    value2 = dff[dff[' '] == 'D'][shome].values[0]
+                    value3 = dff[dff[' '] == 'L'][shome].values[0]
+                    fig = go.Figure()
+                    fig.add_trace(go.Bar(x=['Win'], y=[value1], name='Win', marker_color='green'))
+                    fig.add_trace(go.Bar(x=['Draw'], y=[value2], name='Draw', marker_color='grey'))
+                    fig.add_trace(go.Bar(x=['Lose'], y=[value3], name='Lose', marker_color='red'))
+                    fig.update_layout(title='Home Results',
+                        barmode='group',
+                        width=400,
+                    )
+                    st.plotly_chart(fig)
+
+                    value1 = dff[dff[' '] == 'GFPG'][shome].values[0]
+                    value2 = dff[dff[' '] == 'GAPG'][shome].values[0]
+                    fig = go.Figure()
+                    fig.add_trace(go.Bar(x=['Goal For'], y=[value1], name='', marker_color='Green'))
+                    fig.add_trace(go.Bar(x=['Goal Against'], y=[value2], name='', marker_color='red'))
+                    fig.update_layout(title='Average Goal per Home Game',
+                        barmode='group',
+                        width=400,
+                    )
+                    st.plotly_chart(fig)
+                with gr2:
+                    st.title(saway)
+                    value1 = dff[dff[' '] == 'W'][saway].values[0]
+                    value2 = dff[dff[' '] == 'D'][saway].values[0]
+                    value3 = dff[dff[' '] == 'L'][saway].values[0]
+                    fig = go.Figure()
+                    fig.add_trace(go.Bar(x=['Win'], y=[value1], name='Lose', marker_color='green'))
+                    fig.add_trace(go.Bar(x=['Draw'], y=[value2], name='Draw', marker_color='grey'))
+                    fig.add_trace(go.Bar(x=['Lose'], y=[value3], name='Win', marker_color='red'))
+                    fig.update_layout(title='Away Results',
+                        barmode='group',
+                        width=400,
+                    )
+                    st.plotly_chart(fig)
+
+                    value1 = dff[dff[' '] == 'GFPG'][saway].values[0]
+                    value2 = dff[dff[' '] == 'GAPG'][saway].values[0]
+                    fig = go.Figure()
+                    fig.add_trace(go.Bar(x=['Goal For'], y=[value1], name='', marker_color='Green'))
+                    fig.add_trace(go.Bar(x=['Goal Against'], y=[value2], name='', marker_color='red'))
+                    fig.update_layout(title='Average Goal per Away Game',
+                        barmode='group',
+                        width=400,
+                    )
+                    st.plotly_chart(fig)
 if __name__ == '__main__':
     main()
 
