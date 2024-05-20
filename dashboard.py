@@ -172,6 +172,7 @@ def main():
 
         elif choice == "Today's Picks":
             user_picks = get_datas('alicedb', 'odds_1')
+            st.write(user_picks)
             if user_picks.empty:
                 st.write("There's no matchs for you today!")
             else:
