@@ -172,8 +172,7 @@ def main():
 
         elif choice == "Today's Picks":
             user_picks = get_datas('alicedb', 'odds_1')
-            today = datetime.datetime.now().date().strftime('%d-%m-%y')
-            if user_picks['Date'][0] != today:
+            if user_picks['Date'][0] != datetime.datetime.now().date().strftime('%d-%m-%y'):
                 st.write("There's no matchs for you today!")
             else:
                 bk = st.text_input('Enter your Bankroll:').replace(',', '.')
