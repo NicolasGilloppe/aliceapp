@@ -200,7 +200,7 @@ def main():
                             if odds > odd:
                                 user_picks.at[index, 'Odd'] = odds
                                 user_picks.at[index, 'Bookmaker'] = book
-    
+                    st.write(user_picks)
                     for index, row in user_picks.iterrows():
                         if float(row['Odd']) >= 1.1:
                             st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
