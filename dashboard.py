@@ -181,7 +181,6 @@ def main():
 
         elif choice == "Today's Picks":
             user_picks = get_datas('alicedb', 'odds_1')
-
             rows_to_drop = []
             for index, row in user_picks.iterrows():
                 c = 0
@@ -190,7 +189,6 @@ def main():
                         c += 1
                 if c == 0:
                     rows_to_drop.append(index)
-
             user_picks.drop(rows_to_drop, inplace=True)
             if user_picks.empty or user_picks['Date'][0] != datetime.datetime.now().date().strftime('%d-%m-%y'):
                 st.write("There's no matchs for you today!")
@@ -198,9 +196,6 @@ def main():
                 bk = st.text_input('Enter your Bankroll:').replace(',', '.')
                 try:
                     bk = float(bk)
-                    st.write(user_picks)
-                    st.write(user_bookies)
-                    
                     for index, row in user_picks.iterrows():
                         odd = 0
                         for book in user_bookies:
@@ -211,7 +206,6 @@ def main():
                             if odds > odd:
                                 user_picks.at[index, 'Odd'] = odds
                                 user_picks.at[index, 'Bookmaker'] = book
-                    st.write(user_picks)
                     for index, row in user_picks.iterrows():
                         if float(row['Odd']) >= 1.1:
                             st.link_button(label= f"{row['Time']}: {row['Home']} vs {row['Away']}, bet {round(bk*(float(row['Coeff'])/100), 2)}€ on {row['Bets']} @ {row['Odd']}. Bookmaker is {row['Bookmaker']}", url= f"{row[f'{book}_Url']}")
