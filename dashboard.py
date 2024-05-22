@@ -181,6 +181,17 @@ def main():
 
         elif choice == "Today's Picks":
             user_picks = get_datas('alicedb', 'odds_1')
+
+            rows_to_drop = []
+            for index, row in user_picks.iterrows():
+                c = 0
+                for book in user_bookies:
+                    if row[f'Odds_{book}'] not in ['', None, 0, 0.0, '0', '0.0']:
+                        c += 1
+                if c == 0:
+                    rows_to_drop.append(index)
+
+            user_picks.drop(rows_to_drop, inplace=True)
             if user_picks.empty or user_picks['Date'][0] != datetime.datetime.now().date().strftime('%d-%m-%y'):
                 st.write("There's no matchs for you today!")
             else:
