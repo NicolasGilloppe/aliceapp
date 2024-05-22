@@ -188,6 +188,8 @@ def main():
                 try:
                     bk = float(bk)
                     st.write(user_picks)
+                    st.write(user_bookies)
+                    
                     for index, row in user_picks.iterrows():
                         odd = 0
                         for book in user_bookies:
