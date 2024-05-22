@@ -187,6 +187,7 @@ def main():
                 bk = st.text_input('Enter your Bankroll:').replace(',', '.')
                 try:
                     bk = float(bk)
+                    st.write(user_picks)
                     for index, row in user_picks.iterrows():
                         odd = 0
                         for book in user_bookies:
