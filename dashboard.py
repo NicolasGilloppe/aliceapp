@@ -193,8 +193,10 @@ def main():
                     for index, row in user_picks.iterrows():
                         odd = 0
                         for book in user_bookies:
-                            st.write(row[f'Odds_{book}'])
-                            odds = float(row[f'Odds_{book}'])
+                            try:
+                                odds = float(row[f'Odds_{book}'])
+                            except:
+                                odds = 0
                             if odds > odd:
                                 user_picks.at[index, 'Odd'] = odds
                                 user_picks.at[index, 'Bookmaker'] = book
