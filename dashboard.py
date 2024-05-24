@@ -95,7 +95,6 @@ def signup():
             insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
 
-@st.cache_data(ttl=300, experimental_allow_widgets=True)
 def main():
     st.write("<h2 style='text-align: center; font-size: 80px;'>Welcome to Alice</h2>", unsafe_allow_html=True)
     st.write("<h2 style='text-align: center; font-size: 15px; color: cyan;'>Your-all-in one personal betting algorithm</h2>", unsafe_allow_html=True)
@@ -358,6 +357,6 @@ def main():
                     st.plotly_chart(fig)
 
 
-
+@st.cache_data(ttl=300, experimental_allow_widgets=True)
 if __name__ == '__main__':
     main()
