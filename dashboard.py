@@ -67,6 +67,7 @@ def login(session_state):
             result = get_user_infos('UsersDb', 'Users', email)
             if result is not None:
                 if verify_password(password, result.get('password')):
+                    @st.cache_data(ttl=300)
                     session_state.is_user_logged = True
                     session_state.user_data = result
                     session_state = get_session_state()
