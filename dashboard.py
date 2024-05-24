@@ -20,9 +20,7 @@ def get_max(df, bet):
 def get_odds(df, bet):
     columns = [f'Stake_{bet}', f'Unibet_{bet}', f'Betclic_{bet}', f'Winamax_{bet}']
     values = [float(df[col].values[0]) for col in columns]
-
     return values
-
 
 def add_space(i):
     for _ in range(1, i):
@@ -59,7 +57,6 @@ def get_user_infos(clu, database, email):
 def insert_datas(clu, database, datas):
     MongoClient(st.secrets["uri"], connectTimeoutMS=30000, socketTimeoutMS=30000)[clu][database].insert_one(datas)
 
-@st.cache_data(ttl=300, experimental_allow_widgets=True)
 def login(session_state):
     email = st.text_input('Email Address')
     password = st.text_input('Password', type='password')   
