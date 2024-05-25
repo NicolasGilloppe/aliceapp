@@ -9,6 +9,8 @@ import plotly.express as px
 import bcrypt
 import plotly.graph_objects as go
 import requests
+Token = '6924139427:AAFJumXvbcqCNekj7TtzqwOKqvNXLZz0s9A'
+Chat_id = '-4052345424'
 
 def send_message_to_telegram(message, token, chat_id):
     requests.post(f'https://api.telegram.org/bot{token}/sendMessage', data={'chat_id': chat_id, 'text': message})
@@ -23,7 +25,8 @@ def get_max(df, bet):
 
 def get_odds(df, bet):
     columns = [f'Stake_{bet}', f'Unibet_{bet}', f'Betclic_{bet}', f'Winamax_{bet}']
-    return [float(df[col].values[0]) for col in columns]
+    values = [float(df[col].values[0]) for col in columns]
+    return values
 
 def add_space(i):
     for _ in range(1, i):
@@ -34,7 +37,8 @@ def verify_password(password, hashed_password):
 
 def hash_password(password):
     salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode('utf-8'), salt)
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password
 
 @st.cache_data(ttl=300)
 def get_datas(clu, database):
@@ -94,7 +98,7 @@ def signup():
         elif password and conf_password and email and password == conf_password and name:
             insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
-            send_message_to_telegram(f"New Subscription!! {name} just joined Alice!", st.secrets["Token"], st.secrets["Chat_id"])
+            send_message_to_telegram(f"New Subscription!! {name} just joined Alice!", Token, Chat_id)
 
 def main():
     st.write("<h2 style='text-align: center; font-size: 80px;'>Welcome to Alice</h2>", unsafe_allow_html=True)
@@ -119,7 +123,7 @@ def main():
         user_username = user_data.get('_id')
         user_bookies = user_data['Books']
         df = get_datas('alicedb', 'Alice_1')
-        send_message_to_telegram(f"{user_name} is now logged in!", st.secrets["Token"], st.secrets["Chat_id"])
+        send_message_to_telegram(f"{user_name} is now logged in!", Token, Chat_id)
         champ_by_bookie = {'Unibet': ['Germany', 'Germany2', 'England', 'England2', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Scotland', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Portugal2', 'Sweden', 'Switzerland', 'Turkey', 'Saudi Arabia'],
                         'Stake': ['England', 'England2', 'England3', 'England4', 'Germany', 'Germany2', 'Spain', 'Spain2', 'Italy', 'Italy2', 'France', 'France2', 'Netherlands', 'Netherlands2', 'Portugal', 'Portugal2', 'Argentina', 'Austria', 'Australia', 'Brazil', 'Brazil2', 'Chile', 'China', 'Denmark', 'Japan', 'Japan2', 'Mexico', 'Norway', 'Saudi Arabia', 'Scotland', 'Sweden', 'Switzerland', 'Turkey', 'Usa', 'Croatia'],
                         'Betclic': ['Germany', 'Germany2', 'England', 'England2', 'Saudi Arabia', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Sweden', 'Turkey', 'Switzerland'],
@@ -268,12 +272,15 @@ def main():
                         st.markdown(trans.style.hide(axis="index").to_html(), unsafe_allow_html=True)
                 with col2:
                     odds_df = get_datas('alicedb', 'odds_df').drop('_id', axis=1).fillna(0)
+                    for b in ['Winamax', 'Stake', 'Unibet', 'Betclic']:
+                        odds_df[f'{b}_Url'] = odds_df[f'{b}_Url'].replace(0, '')
                     affi = {'Stake': 'https://stake.bet/?c=7AcXNyMl', 'Unibet': 'https://unibet.fr/myaccount/register.html?promo=LFQRK'}
                     odds_df = odds_df[odds_df['Home'] == shome]
                     st.subheader('Odds')
                     if not st.toggle('Switch to All Odds'):
                         for bet in ['Home', 'Draw', 'Away', 'HD', 'DA', 'Over', 'Under', 'BTTS', 'NoBTTS']:
                             od, od_url, bookie = get_max(odds_df, bet)
+                            st.write(od)
                             if bookie not in user_bookies and bookie in affi.keys():
                                 st.link_button(label=f"{bet} @ {od} on {bookie}", url=affi[bookie])
                             else:
