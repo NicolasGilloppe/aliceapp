@@ -9,8 +9,6 @@ import plotly.express as px
 import bcrypt
 import plotly.graph_objects as go
 import requests
-Token = '6924139427:AAFJumXvbcqCNekj7TtzqwOKqvNXLZz0s9A'
-Chat_id = '-4052345424'
 
 def send_message_to_telegram(message, token, chat_id):
     requests.post(f'https://api.telegram.org/bot{token}/sendMessage', data={'chat_id': chat_id, 'text': message})
@@ -98,7 +96,7 @@ def signup():
         elif password and conf_password and email and password == conf_password and name:
             insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
-            send_message_to_telegram(f"New Subscription!! {name} just joined Alice!", Token, Chat_id)
+            send_message_to_telegram(f"New Subscription!! {name} just joined Alice!", st;secrets["Token"], st.secrest["Chat_id"])
 
 def main():
     st.write("<h2 style='text-align: center; font-size: 80px;'>Welcome to Alice</h2>", unsafe_allow_html=True)
@@ -123,7 +121,7 @@ def main():
         user_username = user_data.get('_id')
         user_bookies = user_data['Books']
         df = get_datas('alicedb', 'Alice_1')
-        send_message_to_telegram(f"{user_name} is now logged in!", Token, Chat_id)
+        send_message_to_telegram(f"{user_name} is now logged in!", st.secrets["Token"], st.secrets["Chat_id"])
         champ_by_bookie = {'Unibet': ['Germany', 'Germany2', 'England', 'England2', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Scotland', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Portugal2', 'Sweden', 'Switzerland', 'Turkey', 'Saudi Arabia'],
                         'Stake': ['England', 'England2', 'England3', 'England4', 'Germany', 'Germany2', 'Spain', 'Spain2', 'Italy', 'Italy2', 'France', 'France2', 'Netherlands', 'Netherlands2', 'Portugal', 'Portugal2', 'Argentina', 'Austria', 'Australia', 'Brazil', 'Brazil2', 'Chile', 'China', 'Denmark', 'Japan', 'Japan2', 'Mexico', 'Norway', 'Saudi Arabia', 'Scotland', 'Sweden', 'Switzerland', 'Turkey', 'Usa', 'Croatia'],
                         'Betclic': ['Germany', 'Germany2', 'England', 'England2', 'Saudi Arabia', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Croatia', 'Denmark', 'Spain', 'Spain2', 'Usa', 'France', 'France2', 'Italy', 'Italy2', 'Japan', 'Mexico', 'Norway', 'Netherlands', 'Portugal', 'Sweden', 'Turkey', 'Switzerland'],
