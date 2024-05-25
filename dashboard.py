@@ -280,7 +280,6 @@ def main():
                     if not st.toggle('Switch to All Odds'):
                         for bet in ['Home', 'Draw', 'Away', 'HD', 'DA', 'Over', 'Under', 'BTTS', 'NoBTTS']:
                             od, od_url, bookie = get_max(odds_df, bet)
-                            st.write(od)
                             if bookie not in user_bookies and bookie in affi.keys():
                                 st.link_button(label=f"{bet} @ {od} on {bookie}", url=affi[bookie])
                             else:
