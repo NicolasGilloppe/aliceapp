@@ -96,7 +96,7 @@ def signup():
         elif password and conf_password and email and password == conf_password and name:
             insert_datas('UsersDb', 'Users', {'_id': email, 'name': name, 'password': hash_password(password), 'Books': books})
             st.write('Your Account Has Been Created Succesfully. You Can Now Login')
-            send_message_to_telegram(f"New Subscription!! {name} just joined Alice!", st;secrets["Token"], st.secrest["Chat_id"])
+            send_message_to_telegram(f"New Subscription!! {name} just joined Alice!", st.secrets["Token"], st.secrest["Chat_id"])
 
 def main():
     st.write("<h2 style='text-align: center; font-size: 80px;'>Welcome to Alice</h2>", unsafe_allow_html=True)
